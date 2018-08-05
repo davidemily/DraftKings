@@ -2,12 +2,18 @@ import csv
 from collections import namedtuple
 ##Reads the CSV File##
 
-def sortResult(result):
+def sortResult(result, attributeSelection):
     print()
     print("Position    |    Name    |    Price    |    Average Score    |    Price per Point")
-    result.sort(key=lambda x: getattr(x,"efficiency"))
+    result.sort(key=lambda x: getattr(x,str(attributeSelection)))
 
-def prompt():
+def attributePrompt():
+    choice = input("Sort the following data by average score or price per point?\n"+
+                "Enter 1 for average score\n"+
+                "Enter 2 for price per point\n")
+    return choice
+    
+def positionPrompt():
     choice = input("Will display data ranked on price per point from lowest to highest\n"+
             "Enter 1 for SP\n"+
             "Enter 2 for 1B\n"+
@@ -51,21 +57,32 @@ csvFile.close()
 
 print("Data has been loaded..")
 
-print("Displaying data:")
+print("Displaying data:\n")
 
-choice = prompt()
+attributeChoice = attributePrompt()
+while int(attributeChoice) < 0 or int(attributeChoice) > 2:
+    print("\nEntered wrong selection\nPlease select again:\n")
+    attributeChoice = attributePrompt()
+if attributeChoice == "1":
+    attribute = "avg_score"
+else:
+    attribute = "efficiency"
 
-while choice != "0":
+print("Selection will be based on "+attribute+"\n")
 
-    if choice == "1":
-        sortResult(result)
+positionChoice = positionPrompt()
+
+while positionChoice != "0":
+
+    if positionChoice == "1":
+        sortResult(result, attribute)
         for person in result:
             if "SP" in person.position and int(person.efficiency) > 0:
                 for stat in person:
                     print(stat, end ="          ")
                 print()
 
-    if choice == "2":
+    if positionChoice == "2":
         sortResult(result)
         for person in result:
             if "1B" in person.position and int(person.efficiency) > 0:
@@ -73,7 +90,7 @@ while choice != "0":
                     print(stat, end ="          ")
                 print()
     
-    if choice == "3":
+    if positionChoice == "3":
         sortResult(result)
         for person in result:
             if "2B" in person.position and int(person.efficiency) > 0:
@@ -81,7 +98,7 @@ while choice != "0":
                     print(stat, end ="          ")
                 print()
     
-    if choice == "4":
+    if positionChoice == "4":
         sortResult(result)
         for person in result:
             if "SS" in person.position and int(person.efficiency) > 0:
@@ -89,7 +106,7 @@ while choice != "0":
                     print(stat, end ="          ")
                 print()
 
-    if choice == "5":
+    if positionChoice == "5":
         sortResult(result)
         for person in result:
             if "3B" in person.position and int(person.efficiency) > 0:
@@ -105,7 +122,7 @@ while choice != "0":
                     print(stat, end ="          ")
                 print()
 
-    if choice == "7":
+    if positionChoice == "7":
         sortResult(result)
         for person in result:
             if "OF" in person.position and int(person.efficiency) > 0:
@@ -113,7 +130,7 @@ while choice != "0":
                     print(stat, end ="      ")
                 print()
 
-    if choice == "8":
+    if positionChoice == "8":
         sortResult(result)
         for person in result:
             if int(person.efficiency) > 0:
@@ -121,11 +138,11 @@ while choice != "0":
                     print(stat, end ="          ")
                 print()
 
-    if choice == "9":
+    if positionChoice == "9":
         greedyKnapsack(result)
 
     
     print()
-    choice = prompt()
+    positionChoice = prompt()
 
 print("Thank you for using my program!  ~ David")
